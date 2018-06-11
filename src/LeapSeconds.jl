@@ -1,10 +1,8 @@
 module LeapSeconds
 
-using ERFA
-using OptionalData
-using RemoteFiles
+export leapseconds
 
-export leapseconds, LSK, LSK_FILE, LSK_DATA
+include(joinpath("..", "gen", "leap_seconds.jl"))
 
 # Constants for calculating the offset between TAI and UTC for
 # dates between 1960-01-01 and 1972-01-01
@@ -77,40 +75,18 @@ const DRIFT_RATES = (
     0.0025920,
 )
 
-struct LSK
-    t::Vector{Float64}
-    leapseconds::Vector{Float64}
-end
-
-function LSK(file)
-    t = Vector{Float64}()
-    leapseconds = Vector{Float64}()
-    re = r"(?<dat>[0-9]{2}),\s+@(?<date>[0-9]{4}-[A-Z]{3}-[0-9])"
-    lines = open(readlines, file)
-    for line in lines
-        s = string(line)
-        if ismatch(re, s)
-            m = match(re, s)
-            push!(leapseconds, float(m["dat"]))
-            push!(t, Dates.datetime2julian(DateTime(m["date"], "y-u-d")))
-        end
-    end
-    LSK(t, leapseconds)
-end
-
-@RemoteFile LSK_FILE "https://naif.jpl.nasa.gov/pub/naif/generic_kernels/lsk/naif0012.tls"
-@OptionalData LSK_DATA LSK "Run 'AstroTime.update()' to load it."
-
-function leapseconds(lsk::LSK, jd)
+function leapseconds(jd)
     # Before 1960-01-01
     if jd < 2.4369345e6
         return 0.0
-    elseif jd < lsk.t[1]
+    elseif jd < LS_EPOCHS[1]
         idx = findlast(jd .>= EPOCHS)
         return OFFSETS[idx] + (jd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
     else
-        return lsk.leapseconds[findlast(jd .>= lsk.t)]
+        return LEAP_SECONDS[findlast(jd .>= LS_EPOCHS)]
     end
 end
-leapseconds(jd) = leapseconds(get(LSK_DATA), jd)
+
+leapseconds(dt::DateTime) = leapseconds(Dates.datetime2julian(dt))
+
 end

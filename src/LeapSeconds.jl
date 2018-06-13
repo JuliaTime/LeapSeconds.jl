@@ -1,3 +1,5 @@
+__precompile__()
+
 module LeapSeconds
 
 export leapseconds
@@ -7,7 +9,7 @@ include(joinpath("..", "gen", "leap_seconds.jl"))
 # Constants for calculating the offset between TAI and UTC for
 # dates between 1960-01-01 and 1972-01-01
 
-const EPOCHS = (
+const EPOCHS = [
     2.4369345e6,
     2.4373005e6,
     2.4375125e6,
@@ -22,9 +24,9 @@ const EPOCHS = (
     2.4390045e6,
     2.4391265e6,
     2.4398875e6,
-)
+]
 
-const OFFSETS = (
+const OFFSETS = [
     1.417818,
     1.422818,
     1.372818,
@@ -39,9 +41,9 @@ const OFFSETS = (
     3.840130,
     4.313170,
     4.213170,
-)
+]
 
-const DRIFT_EPOCHS = (
+const DRIFT_EPOCHS = [
     2.4373005e6,
     2.4373005e6,
     2.4373005e6,
@@ -56,9 +58,9 @@ const DRIFT_EPOCHS = (
     2.4387615e6,
     2.4391265e6,
     2.4391265e6,
-)
+]
 
-const DRIFT_RATES = (
+const DRIFT_RATES = [
     0.0012960,
     0.0012960,
     0.0012960,
@@ -73,17 +75,17 @@ const DRIFT_RATES = (
     0.0012960,
     0.0025920,
     0.0025920,
-)
+]
 
 function leapseconds(jd)
     # Before 1960-01-01
     if jd < 2.4369345e6
         return 0.0
     elseif jd < LS_EPOCHS[1]
-        idx = findlast(jd .>= EPOCHS)
+        idx = searchsortedlast(EPOCHS, jd)
         return OFFSETS[idx] + (jd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
     else
-        return LEAP_SECONDS[findlast(jd .>= LS_EPOCHS)]
+        return LEAP_SECONDS[searchsortedlast(LS_EPOCHS, jd)]
     end
 end
 

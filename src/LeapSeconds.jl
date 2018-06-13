@@ -79,14 +79,14 @@ const DRIFT_RATES = [
 
 function leapseconds(jd)
     # Before 1960-01-01
-    if jd < 2.4369345e6
-        return 0.0
-    elseif jd < LS_EPOCHS[1]
+    jd < 2.4369345e6 && return 0.0
+
+    if jd < LS_EPOCHS[1]
         idx = searchsortedlast(EPOCHS, jd)
         return OFFSETS[idx] + (jd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
-    else
-        return LEAP_SECONDS[searchsortedlast(LS_EPOCHS, jd)]
     end
+
+    LEAP_SECONDS[searchsortedlast(LS_EPOCHS, jd)]
 end
 
 leapseconds(dt::DateTime) = leapseconds(Dates.datetime2julian(dt))

@@ -8,6 +8,7 @@ include(joinpath("..", "gen", "leap_seconds.jl"))
 
 # Constants for calculating the offset between TAI and UTC for
 # dates between 1960-01-01 and 1972-01-01
+# See ftp://maia.usno.navy.mil/ser7/tai-utc.dat
 
 const EPOCHS = [
     2.4369345e6,
@@ -81,6 +82,7 @@ function leapseconds(jd)
     # Before 1960-01-01
     jd < 2.4369345e6 && return 0.0
 
+    # Before 1972-01-01
     if jd < LS_EPOCHS[1]
         idx = searchsortedlast(EPOCHS, jd)
         return OFFSETS[idx] + (jd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]

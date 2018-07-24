@@ -2,7 +2,9 @@ __precompile__()
 
 module LeapSeconds
 
-export leapseconds
+using Dates: DateTime, datetime2julian
+
+export offset_tai_utc
 
 include(joinpath("..", "gen", "leap_seconds.jl"))
 
@@ -78,9 +80,19 @@ const DRIFT_RATES = [
     0.0025920,
 ]
 
-function leapseconds(jd)
+"""
+    offset_tai_utc(jd)
+
+Returns the offset between International Atomic Time (TAI) and Coordinated
+Universal Time (UTC) for a given Julian Date `jd`. For dates after
+1972-01-01, this is the number of leap seconds.
+"""
+function offset_tai_utc(jd)
     # Before 1960-01-01
-    jd < 2.4369345e6 && return 0.0
+    if jd < 2.4369345e6
+        @warn "UTC is not defined for dates before 1960-01-01."
+        return 0.0
+    end
 
     # Before 1972-01-01
     if jd < LS_EPOCHS[1]
@@ -91,6 +103,15 @@ function leapseconds(jd)
     LEAP_SECONDS[searchsortedlast(LS_EPOCHS, jd)]
 end
 
-leapseconds(dt::DateTime) = leapseconds(Dates.datetime2julian(dt))
+
+"""
+    offset_tai_utc(dt::DateTime)
+
+Returns the offset between International Atomic Time (TAI) and Coordinated
+Universal Time (UTC) for a given `DateTime`. For dates after
+1972-01-01, this is the number of leap seconds.
+"""
+offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
 
 end
+

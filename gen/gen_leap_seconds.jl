@@ -1,4 +1,4 @@
-length(ARGS) != 1 && error("Need to provide the kernel number as an argument.") 
+length(ARGS) != 1 && error("Need to provide the kernel number as an argument.")
 
 num = lpad(ARGS[1], 4, "0")
 file = "naif$num.tls"

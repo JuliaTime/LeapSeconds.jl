@@ -11,7 +11,7 @@ packages will need to be updated!**
 ## Installation
 
 ```julia
-julia> ] add LeapSeconds
+pkg> add LeapSeconds
 ```
 
 ## Usage

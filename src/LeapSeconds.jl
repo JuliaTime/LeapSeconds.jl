@@ -6,25 +6,27 @@ export offset_tai_utc
 
 include(joinpath("..", "gen", "leap_seconds.jl"))
 
+const MJD_EPOCH = 2400000.5
+
 # Constants for calculating the offset between TAI and UTC for
 # dates between 1960-01-01 and 1972-01-01
 # See ftp://maia.usno.navy.mil/ser7/tai-utc.dat
 
 const EPOCHS = [
-    2.4369345e6,
-    2.4373005e6,
-    2.4375125e6,
-    2.4376655e6,
-    2.4383345e6,
-    2.4383955e6,
-    2.4384865e6,
-    2.4386395e6,
-    2.4387615e6,
-    2.4388205e6,
-    2.4389425e6,
-    2.4390045e6,
-    2.4391265e6,
-    2.4398875e6,
+    36934,
+    37300,
+    37512,
+    37665,
+    38334,
+    38395,
+    38486,
+    38639,
+    38761,
+    38820,
+    38942,
+    39004,
+    39126,
+    39887,
 ]
 
 const OFFSETS = [
@@ -45,20 +47,20 @@ const OFFSETS = [
 ]
 
 const DRIFT_EPOCHS = [
-    2.4373005e6,
-    2.4373005e6,
-    2.4373005e6,
-    2.4376655e6,
-    2.4376655e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4387615e6,
-    2.4391265e6,
-    2.4391265e6,
+    37300,
+    37300,
+    37300,
+    37665,
+    37665,
+    38761,
+    38761,
+    38761,
+    38761,
+    38761,
+    38761,
+    38761,
+    39126,
+    39126,
 ]
 
 const DRIFT_RATES = [
@@ -86,19 +88,21 @@ Universal Time (UTC) for a given Julian Date `jd`. For dates after
 1972-01-01, this is the number of leap seconds.
 """
 function offset_tai_utc(jd)
+    mjd = jd - MJD_EPOCH
+
     # Before 1960-01-01
-    if jd < 2.4369345e6
+    if mjd < 36934.0
         @warn "UTC is not defined for dates before 1960-01-01."
         return 0.0
     end
 
     # Before 1972-01-01
-    if jd < LS_EPOCHS[1]
-        idx = searchsortedlast(EPOCHS, jd)
-        return OFFSETS[idx] + (jd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
+    if mjd < LS_EPOCHS[1]
+        idx = searchsortedlast(EPOCHS, floor(Int, mjd))
+        return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
     end
 
-    LEAP_SECONDS[searchsortedlast(LS_EPOCHS, jd)]
+    LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
 end
 
 

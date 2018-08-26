@@ -1,5 +1,3 @@
-__precompile__()
-
 module LeapSeconds
 
 using Dates: DateTime, datetime2julian

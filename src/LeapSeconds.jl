@@ -2,11 +2,12 @@ module LeapSeconds
 
 using Dates: DateTime, datetime2julian
 
-export offset_tai_utc
+export offset_tai_utc, offset_utc_tai
 
 include(joinpath("..", "gen", "leap_seconds.jl"))
 
 const MJD_EPOCH = 2400000.5
+const SECONDS_PER_DAY = 86400
 
 # Constants for calculating the offset between TAI and UTC for
 # dates between 1960-01-01 and 1972-01-01
@@ -80,6 +81,8 @@ const DRIFT_RATES = [
     0.0025920,
 ]
 
+leapseconds(mjd) = LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
+
 """
     offset_tai_utc(jd)
 
@@ -102,7 +105,31 @@ function offset_tai_utc(jd)
         return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
     end
 
-    LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
+    leapseconds(mjd)
+end
+
+function offset_utc_tai(jd)
+    mjd = jd - MJD_EPOCH
+
+    # Before 1960-01-01
+    if mjd < 36934.0
+        @warn "UTC is not defined for dates before 1960-01-01."
+        return 0.0
+    end
+
+    # Before 1972-01-01
+    if mjd < LS_EPOCHS[1]
+        idx = searchsortedlast(EPOCHS, floor(Int, mjd))
+        rate = DRIFT_RATES[idx] / (1 + DRIFT_RATES[idx])
+        offset = OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * rate
+        return -offset
+    end
+
+    offset = 0.0
+    for _ = 1:3
+        offset = leapseconds(mjd + offset / SECONDS_PER_DAY)
+    end
+    return -offset
 end
 
 

@@ -4,6 +4,12 @@ using ERFA
 using Test
 
 @testset "Leap Seconds" begin
+    @testset "Definitions" begin
+        tai = ERFA.dtf2d("TAI", 2020, 1, 1, 0, 0, 37.0)
+        utc = ERFA.dtf2d("UTC", 2020, 1, 1, 0, 0, 0.0)
+        @test offset_tai_utc(tai...) == (tai[2] - utc[2]) * LeapSeconds.SECONDS_PER_DAY
+        @test offset_utc_tai(utc...) == (utc[2] - tai[2]) * LeapSeconds.SECONDS_PER_DAY
+    end
     @testset "Warning for pre-UTC dates" begin
         msg = "UTC is not defined for dates before 1960-01-01."
         @test (@test_logs (:warn, msg) offset_tai_utc(DateTime(1959,1,1,))) == 0.0

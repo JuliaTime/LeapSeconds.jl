@@ -84,14 +84,16 @@ const DRIFT_RATES = [
 leapseconds(mjd) = LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
 
 """
-    offset_tai_utc(jd)
+    offset_tai_utc(tai1, tai2=0.0)
 
-Returns the offset between International Atomic Time (TAI) and Coordinated
-Universal Time (UTC) for a given Julian Date `jd`. For dates after
-1972-01-01, this is the number of leap seconds.
+Returns the difference between International Atomic Time (TAI) and Coordinated
+Universal Time (UTC) for a given TAI Julian day number `tai1` (optionally
+split into two parts to increase precision).
+
+``\\Delta AT = TAI - UTC``
 """
-function offset_tai_utc(jd, jd1=0.0)
-    mjd = jd - MJD_EPOCH + jd1
+function offset_tai_utc(tai1, tai2=0.0)
+    mjd = tai1 - MJD_EPOCH + tai2
 
     # Before 1960-01-01
     if mjd < 36934.0
@@ -112,8 +114,31 @@ function offset_tai_utc(jd, jd1=0.0)
     leapseconds(mjd)
 end
 
-function offset_utc_tai(jd, jd1=0.0)
-    mjd = jd - MJD_EPOCH + jd1
+"""
+    offset_tai_utc(dt::DateTime)
+
+Returns the difference between International Atomic Time (TAI) and Coordinated
+Universal Time (UTC) for a given `DateTime` in TAI.
+
+``\\Delta AT = TAI - UTC``
+"""
+offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
+
+"""
+    offset_utc_tai(utc1, utc2=0.0)
+
+Returns the difference between Coordinated Universal Time (UTC) and
+International Atomic Time (TAI) for a given UTC pseudo-Julian day number
+`utc1` (optionally split into two parts to increase precision).
+
+``\\Delta AT = UTC - TAI``
+
+!!! note
+    This function uses the [ERFA convention](https://github.com/liberfa/erfa/blob/master/src/dtf2d.c#L49)
+    for Julian day numbers representing UTC dates during leap seconds.
+"""
+function offset_utc_tai(utc1, utc2=0.0)
+    mjd = utc1 - MJD_EPOCH + utc2
 
     # Before 1960-01-01
     if mjd < 36934.0
@@ -135,15 +160,22 @@ function offset_utc_tai(jd, jd1=0.0)
     return -offset
 end
 
-
 """
-    offset_tai_utc(dt::DateTime)
+    offset_utc_tai(dt::DateTime)
 
-Returns the offset between International Atomic Time (TAI) and Coordinated
-Universal Time (UTC) for a given `DateTime`. For dates after
-1972-01-01, this is the number of leap seconds.
+Returns the difference between Coordinated Universal Time (UTC) and
+International Atomic Time (TAI) for a given `DateTime` in UTC.
+
+``\\Delta AT = UTC - TAI``
+
+!!! warning
+    The `DateTime` type from Julia's Standard Libary cannot represent UTC dates
+    during leap seconds, e.g. "2016-12-31T23:59:60.0" will not be parsed as a
+    valid `DateTime` but throw an error.
+    The [AstroTime.jl](https://github.com/JuliaAstro/AstroTime.jl) package
+    provides a leap second-aware `Epoch` type that can be used as a replacement.
 """
-offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
+offset_utc_tai(dt::DateTime) = offset_utc_tai(datetime2julian(dt))
 
 end
 

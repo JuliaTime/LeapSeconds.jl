@@ -8,5 +8,5 @@ makedocs(
 )
 
 deploydocs(
-    repo = "https://github.com/JuliaTime/LeapSeconds.jl.git"
+    repo = "github.com/JuliaTime/LeapSeconds.jl.git"
 )

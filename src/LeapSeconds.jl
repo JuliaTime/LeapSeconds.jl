@@ -88,7 +88,7 @@ leapseconds(mjd) = LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
 
 Returns the difference between International Atomic Time (TAI) and Coordinated
 Universal Time (UTC) for a given TAI Julian day number `tai1` (optionally
-split into two parts to increase precision).
+split into two parts for increased precision).
 
 ``\\Delta AT = TAI - UTC``
 """
@@ -129,7 +129,7 @@ offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
 
 Returns the difference between Coordinated Universal Time (UTC) and
 International Atomic Time (TAI) for a given UTC pseudo-Julian day number
-`utc1` (optionally split into two parts to increase precision).
+`utc1` (optionally split into two parts for increased precision).
 
 ``\\Delta AT = UTC - TAI``
 

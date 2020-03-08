@@ -13,6 +13,7 @@ using Test
     @testset "Warning for pre-UTC dates" begin
         msg = "UTC is not defined for dates before 1960-01-01."
         @test (@test_logs (:warn, msg) offset_tai_utc(DateTime(1959,1,1,))) == 0.0
+        @test (@test_logs (:warn, msg) offset_utc_tai(DateTime(1959,1,1,))) == 0.0
     end
     @testset "All leap seconds" begin
         @testset for dt in DateTime(1960,1,1):Month(1):DateTime(2018,12,1)

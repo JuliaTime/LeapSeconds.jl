@@ -102,7 +102,17 @@ function offset_tai_utc(jd)
     # Before 1972-01-01
     if mjd < LS_EPOCHS[1]
         idx = searchsortedlast(EPOCHS, floor(Int, mjd))
-        return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
+        rate_utc = DRIFT_RATES[idx]
+        rate_tai = rate_utc / (1 + rate_utc)
+        @show jd
+        @show mjd
+        @show rate_utc
+        @show rate_tai
+        @show OFFSETS[idx]
+        @show DRIFT_EPOCHS[idx]
+        @show mjd - DRIFT_EPOCHS[idx]
+        return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * rate_tai
+        # return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
     end
 
     leapseconds(mjd)
@@ -120,8 +130,7 @@ function offset_utc_tai(jd)
     # Before 1972-01-01
     if mjd < LS_EPOCHS[1]
         idx = searchsortedlast(EPOCHS, floor(Int, mjd))
-        rate = DRIFT_RATES[idx] / (1 + DRIFT_RATES[idx])
-        offset = OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * rate
+        offset = OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
         return -offset
     end
 

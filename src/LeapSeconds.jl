@@ -90,8 +90,8 @@ Returns the offset between International Atomic Time (TAI) and Coordinated
 Universal Time (UTC) for a given Julian Date `jd`. For dates after
 1972-01-01, this is the number of leap seconds.
 """
-function offset_tai_utc(jd)
-    mjd = jd - MJD_EPOCH
+function offset_tai_utc(jd, jd1=0.0)
+    mjd = jd - MJD_EPOCH + jd1
 
     # Before 1960-01-01
     if mjd < 36934.0
@@ -102,24 +102,18 @@ function offset_tai_utc(jd)
     # Before 1972-01-01
     if mjd < LS_EPOCHS[1]
         idx = searchsortedlast(EPOCHS, floor(Int, mjd))
-        rate_utc = DRIFT_RATES[idx]
-        rate_tai = rate_utc / (1 + rate_utc)
-        @show jd
-        @show mjd
-        @show rate_utc
-        @show rate_tai
-        @show OFFSETS[idx]
-        @show DRIFT_EPOCHS[idx]
-        @show mjd - DRIFT_EPOCHS[idx]
-        return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * rate_tai
-        # return OFFSETS[idx] + (mjd - DRIFT_EPOCHS[idx]) * DRIFT_RATES[idx]
+        rate_utc = DRIFT_RATES[idx] / SECONDS_PER_DAY
+        rate_tai = rate_utc / (1 + rate_utc) * SECONDS_PER_DAY
+        offset = OFFSETS[idx]
+        Δt = mjd - DRIFT_EPOCHS[idx] - offset / SECONDS_PER_DAY
+        return offset + Δt * rate_tai
     end
 
     leapseconds(mjd)
 end
 
-function offset_utc_tai(jd)
-    mjd = jd - MJD_EPOCH
+function offset_utc_tai(jd, jd1=0.0)
+    mjd = jd - MJD_EPOCH + jd1
 
     # Before 1960-01-01
     if mjd < 36934.0

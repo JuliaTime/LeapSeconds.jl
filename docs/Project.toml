@@ -1,5 +1,6 @@
 [deps]
 Documenter = "e30172f5-a6a5-5a46-863b-614d45cd2de4"
+LeapSeconds = "2f5f767c-a11e-5269-a972-637d4b97c32d"
 
 [compat]
-Documenter = "0.24"
+Documenter = "1"

@@ -1,10 +1,12 @@
 using Documenter
 using LeapSeconds
+using Documenter.Remotes: GitHub
 
 makedocs(
     sitename = "LeapSeconds",
     format = Documenter.HTML(),
-    modules = [LeapSeconds]
+    modules = [LeapSeconds],
+    repo = GitHub("JuliaTime/LeapSeconds.jl"),
 )
 
 deploydocs(

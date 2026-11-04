@@ -3,6 +3,11 @@ using Dates: DateTime, Month, year, month, day, datetime2julian
 using ERFA
 using Test
 
+@testset "Aqua" begin
+    using Aqua
+    Aqua.test_all(LeapSeconds)
+end
+
 @testset "Leap Seconds" begin
     @testset "Definitions" begin
         tai = ERFA.dtf2d("TAI", 2020, 1, 1, 0, 0, 37.0)

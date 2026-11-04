@@ -4,7 +4,7 @@ using Dates: DateTime, datetime2julian
 
 export offset_tai_utc, offset_utc_tai
 
-include(joinpath("..", "gen", "leap_seconds.jl"))
+include("leap_seconds.jl")
 
 const MJD_EPOCH = 2400000.5
 const SECONDS_PER_DAY = 86400

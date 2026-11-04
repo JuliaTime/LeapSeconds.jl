@@ -1,12 +1,13 @@
 # LeapSeconds
 
-*Leap seconds in Julia*
+[![Stable](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliatime.github.io/LeapSeconds.jl/stable/)
+[![Dev](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliatime.github.io/LeapSeconds.jl/dev/)
 
-[![Stable Docs](https://img.shields.io/badge/docs-stable-blue.svg)](https://juliatime.github.io/LeapSeconds.jl/stable)
-[![Dev Docs](https://img.shields.io/badge/docs-dev-blue.svg)](https://juliatime.github.io/LeapSeconds.jl/dev)
-[![Build Status](https://travis-ci.org/JuliaTime/LeapSeconds.jl.svg?branch=master)](https://travis-ci.org/JuliaTime/LeapSeconds.jl)
-[![Windows Build Status](https://ci.appveyor.com/api/projects/status/b3b6ji2bo70448ex?svg=true)](https://ci.appveyor.com/project/helgee/leapseconds-jl)
-[![codecov.io](http://codecov.io/github/JuliaTime/LeapSeconds.jl/coverage.svg?branch=master)](http://codecov.io/github/JuliaTime/LeapSeconds.jl?branch=master)
+[![Test](https://github.com/JuliaTime/LeapSeconds.jl/actions/workflows/Test.yml/badge.svg)](https://github.com/JuliaTime/LeapSeconds.jl/actions/workflows/Test.yml)
+[![Coverage](https://codecov.io/gh/JuliaTime/LeapSeconds.jl/graph/badge.svg)](https://codecov.io/gh/JuliaTime/LeapSeconds.jl)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+*Leap seconds in Julia*
 
 **A new minor version of this package will be published everytime a new leap second
 is issued be the [IERS](https://www.iers.org/IERS/EN/Home/home_node.html) and dependent

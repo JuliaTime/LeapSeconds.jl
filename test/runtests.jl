@@ -1,6 +1,6 @@
 using LeapSeconds
 using Dates: DateTime, Month, year, month, day, datetime2julian
-using ERFA
+using SOFA: SOFA
 using Test
 
 @testset "Aqua" begin
@@ -10,8 +10,8 @@ end
 
 @testset "Leap Seconds" begin
     @testset "Definitions" begin
-        tai = ERFA.dtf2d("TAI", 2020, 1, 1, 0, 0, 37.0)
-        utc = ERFA.dtf2d("UTC", 2020, 1, 1, 0, 0, 0.0)
+        tai = SOFA.dtf2d("TAI", 2020, 1, 1, 0, 0, 37.0)
+        utc = SOFA.dtf2d("UTC", 2020, 1, 1, 0, 0, 0.0)
         @test offset_tai_utc(tai...) == (tai[2] - utc[2]) * LeapSeconds.SECONDS_PER_DAY
         @test offset_utc_tai(utc...) == (utc[2] - tai[2]) * LeapSeconds.SECONDS_PER_DAY
     end
@@ -26,7 +26,7 @@ end
             m = month(dt)
             d = day(dt)
             jd = datetime2julian(dt)
-            @test offset_utc_tai(jd) ≈ -ERFA.dat(y, m, d, 0.0)
+            @test offset_utc_tai(jd) ≈ -SOFA.dat(y, m, d, 0.0)
             Δt = offset_utc_tai(jd) / LeapSeconds.SECONDS_PER_DAY
             @test offset_utc_tai(jd) ≈ -offset_tai_utc(jd - Δt) atol=1e-12
         end
@@ -38,9 +38,9 @@ end
                             (2012, 6, 30, 23, 59, 60.5),
                             (2012, 7, 1, 0, 0, 0.0),
                            )
-            utc = ERFA.dtf2d("UTC", dt...)
+            utc = SOFA.dtf2d("UTC", dt...)
             utc_jd = sum(utc)
-            tai = ERFA.utctai(utc...)
+            tai = SOFA.utctai(utc...)
             tai_jd = sum(tai)
             diff_utc_tai = offset_utc_tai(utc_jd) / LeapSeconds.SECONDS_PER_DAY
             diff_tai_utc = offset_tai_utc(tai_jd) / LeapSeconds.SECONDS_PER_DAY

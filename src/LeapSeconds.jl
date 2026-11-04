@@ -134,7 +134,7 @@ International Atomic Time (TAI) for a given UTC pseudo-Julian day number
 ``\\Delta AT = UTC - TAI``
 
 !!! note
-    This function uses the [ERFA convention](https://github.com/liberfa/erfa/blob/master/src/dtf2d.c#L49)
+    This function uses the [SOFA convention](https://juliaastro.org/SOFA/stable/api/timescales/#SOFA.dtf2d)
     for Julian day numbers representing UTC dates during leap seconds.
 """
 function offset_utc_tai(utc1, utc2=0.0)

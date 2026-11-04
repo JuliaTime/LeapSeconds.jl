@@ -9,9 +9,9 @@
 
 *Leap seconds in Julia*
 
-**A new minor version of this package will be published everytime a new leap second
-is issued be the [IERS](https://www.iers.org/IERS/EN/Home/home_node.html) and dependent
-packages will need to be updated!**
+The last leap second was introduced on 2016-12-31, so TAI - UTC has been 37 s since 2017-01-01.
+With [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E), UTC becomes continuous on 2027-05-20, and the [IERS](https://www.iers.org/IERS/EN/Home/home_node.html) has announced that no leap second will be introduced at the end of December 2026 ([Bulletin C 72](https://datacenter.iers.org/data/16/bulletinc-072.txt)).
+The table shipped with this package is therefore expected to be final. It remains necessary for converting any date between 1960 and the present.
 
 ## Installation
 
@@ -24,7 +24,7 @@ pkg> add LeapSeconds
 The package exports the two functions `offset_tai_utc` and `offset_utc_tai`
 which return the difference between International Atomic Time (TAI) and
 Coordinated Universal Time (UTC) or vice versa for a given date.
-For dates after 1972-01-01, this is the number of leap seconds.
+For dates after 1972-01-01, this is a whole number of seconds: the initial offset of 10 s plus the leap seconds introduced since then.
 
 ```julia
 using LeapSeconds

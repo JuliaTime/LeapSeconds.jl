@@ -49,4 +49,15 @@ end
             @test tai_jd - diff_tai_utc - utc_jd ≈ 0.0 atol=1e-9
         end
     end
+    @testset "Continuous UTC" begin
+        # No leap second has been introduced since 2016-12-31, and UTC becomes
+        # continuous on 2027-05-20 (CGPM 2026, Resolution 5), so TAI - UTC stays at 37 s.
+        @testset for dt in (DateTime(2027, 5, 20), DateTime(2100, 1, 1))
+            jd = datetime2julian(dt)
+            @test offset_tai_utc(dt) == 37.0
+            @test offset_utc_tai(dt) == -37.0
+            Δt = offset_utc_tai(jd) / LeapSeconds.SECONDS_PER_DAY
+            @test offset_utc_tai(jd) ≈ -offset_tai_utc(jd - Δt) atol=1e-12
+        end
+    end
 end

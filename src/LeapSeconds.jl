@@ -93,6 +93,9 @@ The Julian date can be passed as a single number `tai1`, or split between `tai1`
 
 ``\\Delta AT = TAI - UTC``
 
+For dates after 2017-01-01 the offset is 37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
+
 # Examples
 
 ```jldoctest; setup = :(using LeapSeconds)
@@ -132,6 +135,9 @@ Returns the difference between International Atomic Time (TAI) and Coordinated
 Universal Time (UTC) for a given `DateTime` in TAI.
 
 ``\\Delta AT = TAI - UTC``
+
+For dates after 2017-01-01 the offset is 37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 """
 offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
 
@@ -144,6 +150,9 @@ International Atomic Time (TAI) for a given UTC pseudo-Julian date `utc1 + utc2`
 The pseudo-Julian date can be passed as a single number `utc1`, or split between `utc1` and `utc2` in any convenient way for increased precision, e.g., with `utc1` as the Julian day number and `utc2` as the fraction of the day.
 
 ``\\Delta AT = UTC - TAI``
+
+For dates after 2017-01-01 the offset is -37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 
 !!! note
     This function uses the [SOFA convention](https://juliaastro.org/SOFA/stable/api/timescales/#SOFA.dtf2d)
@@ -190,6 +199,9 @@ International Atomic Time (TAI) for a given `DateTime` in UTC.
 
 ``\\Delta AT = UTC - TAI``
 
+For dates after 2017-01-01 the offset is -37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
+
 !!! warning
     The `DateTime` type from Julia's Standard Libary cannot represent UTC dates
     during leap seconds, e.g. "2016-12-31T23:59:60.0" will not be parsed as a
@@ -200,4 +212,3 @@ International Atomic Time (TAI) for a given `DateTime` in UTC.
 offset_utc_tai(dt::DateTime) = offset_utc_tai(datetime2julian(dt))
 
 end
-

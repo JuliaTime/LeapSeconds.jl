@@ -1,3 +1,6 @@
+# naif0012.tls is expected to be the last NAIF leap second kernel,
+# since UTC becomes continuous on 2027-05-20 (CGPM 2026, Resolution 5).
+# This script is kept so that `src/leap_seconds.jl` stays reproducible.
 using Dates
 
 length(ARGS) != 1 && error("Need to provide the kernel number as an argument.")

@@ -91,6 +91,9 @@ Universal Time (UTC) for a given TAI Julian day number `tai1` (optionally
 split into two parts for increased precision).
 
 ``\\Delta AT = TAI - UTC``
+
+For dates after 2017-01-01 the offset is 37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 """
 function offset_tai_utc(tai1, tai2=0.0)
     mjd = tai1 - MJD_EPOCH + tai2
@@ -121,6 +124,9 @@ Returns the difference between International Atomic Time (TAI) and Coordinated
 Universal Time (UTC) for a given `DateTime` in TAI.
 
 ``\\Delta AT = TAI - UTC``
+
+For dates after 2017-01-01 the offset is 37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 """
 offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
 
@@ -132,6 +138,9 @@ International Atomic Time (TAI) for a given UTC pseudo-Julian day number
 `utc1` (optionally split into two parts for increased precision).
 
 ``\\Delta AT = UTC - TAI``
+
+For dates after 2017-01-01 the offset is -37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 
 !!! note
     This function uses the [SOFA convention](https://juliaastro.org/SOFA/stable/api/timescales/#SOFA.dtf2d)
@@ -167,6 +176,9 @@ Returns the difference between Coordinated Universal Time (UTC) and
 International Atomic Time (TAI) for a given `DateTime` in UTC.
 
 ``\\Delta AT = UTC - TAI``
+
+For dates after 2017-01-01 the offset is -37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
+see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
 
 !!! warning
     The `DateTime` type from Julia's Standard Libary cannot represent UTC dates

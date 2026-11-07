@@ -87,13 +87,24 @@ leapseconds(mjd) = LEAP_SECONDS[searchsortedlast(LS_EPOCHS, floor(Int, mjd))]
     offset_tai_utc(tai1, tai2=0.0)
 
 Returns the difference between International Atomic Time (TAI) and Coordinated
-Universal Time (UTC) for a given TAI Julian day number `tai1` (optionally
-split into two parts for increased precision).
+Universal Time (UTC) for a given TAI Julian date `tai1 + tai2`.
+
+The Julian date can be passed as a single number `tai1`, or split between `tai1` and `tai2` in any convenient way for increased precision, e.g., with `tai1` as the Julian day number and `tai2` as the fraction of the day.
 
 ``\\Delta AT = TAI - UTC``
 
 For dates after 2017-01-01 the offset is 37 s. No further leap seconds are expected because UTC becomes continuous on 2027-05-20,
 see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5E).
+
+# Examples
+
+```jldoctest; setup = :(using LeapSeconds)
+julia> offset_tai_utc(2457754.5) # 2017-01-01T00:00:00 TAI
+37.0
+
+julia> offset_tai_utc(2457754.0, 0.5) # The same date, split into day number and fraction
+37.0
+```
 """
 function offset_tai_utc(tai1, tai2=0.0)
     mjd = tai1 - MJD_EPOCH + tai2
@@ -134,8 +145,9 @@ offset_tai_utc(dt::DateTime) = offset_tai_utc(datetime2julian(dt))
     offset_utc_tai(utc1, utc2=0.0)
 
 Returns the difference between Coordinated Universal Time (UTC) and
-International Atomic Time (TAI) for a given UTC pseudo-Julian day number
-`utc1` (optionally split into two parts for increased precision).
+International Atomic Time (TAI) for a given UTC pseudo-Julian date `utc1 + utc2`.
+
+The pseudo-Julian date can be passed as a single number `utc1`, or split between `utc1` and `utc2` in any convenient way for increased precision, e.g., with `utc1` as the Julian day number and `utc2` as the fraction of the day.
 
 ``\\Delta AT = UTC - TAI``
 
@@ -144,7 +156,17 @@ see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5
 
 !!! note
     This function uses the [SOFA convention](https://juliaastro.org/SOFA/stable/api/timescales/#SOFA.dtf2d)
-    for Julian day numbers representing UTC dates during leap seconds.
+    for pseudo-Julian dates representing UTC dates during leap seconds.
+
+# Examples
+
+```jldoctest; setup = :(using LeapSeconds)
+julia> offset_utc_tai(2457754.5) # 2017-01-01T00:00:00 UTC
+-37.0
+
+julia> offset_utc_tai(2457754.0, 0.5) # The same date, split into day number and fraction
+-37.0
+```
 """
 function offset_utc_tai(utc1, utc2=0.0)
     mjd = utc1 - MJD_EPOCH + utc2
@@ -190,4 +212,3 @@ see [Resolution 5 of the 28th CGPM (2026)](https://doi.org/10.59161/CGPM2026RES5
 offset_utc_tai(dt::DateTime) = offset_utc_tai(datetime2julian(dt))
 
 end
-
